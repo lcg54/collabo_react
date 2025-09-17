@@ -13,7 +13,7 @@ function App() {
         <Nav.Link href="">회원가입</Nav.Link>
       </Nav>
       <Nav>
-        <NavDropdown title="Dropdown Example">
+        <NavDropdown title="Example Dropdown">
           <NavDropdown.Item onClick={()=>navigate(`/fruit`)}>과일 1개</NavDropdown.Item>
           <NavDropdown.Item onClick={()=>navigate(`/fruit/list`)}>과일 목록</NavDropdown.Item>
           <NavDropdown.Divider />
