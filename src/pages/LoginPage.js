@@ -21,38 +21,31 @@ function App() {
     e.preventDefault(); // 폼 기본동작(=새로고침) 막기
 
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = '이름을 입력해 주세요.';
     if (!formData.email.includes('@')) newErrors.email = '유효한 이메일 형식이 아닙니다.';
-    if (formData.password.length < 8) newErrors.password = '비밀번호는 최소 8자 이상이어야 합니다.';
-    if (!formData.address.trim()) newErrors.address = '주소를 입력해 주세요.';
+    if (formData.password.length < 6) newErrors.password = '비밀번호는 최소 6자 이상이어야 합니다.';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return; // 에러가 존재하면 아래 try 구문으로 안내려가고 탈출
+      return; // 에러가 존재하면 아래 try 구문으로 안내려가고 탈출 // else보다 이 방식을 권장
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/member/signup`, formData); // axios를 사용한 POST 요청
-      if (response.status === 201) {
-        setFormData({ name: '', email: '', password: '', address: '' });
-        setErrors({});
-        alert(response.data);
-        navigate(`/member/login`);
-      }
+      // axios를 사용한 POST 요청
+      await axios.post(`${API_BASE_URL}/member/signup`, formData);
+
+      setFormData({ name: '', email: '', password: '', address: '' });
+      setErrors({});
+      alert('회원 가입에 성공하였습니다. 로그인 페이지로 이동합니다.');
+      navigate(`/member/login`);
+
     } catch (error) {
-      if (error.response && error.response.data) {
-        setErrors(prev => ({ ...prev, email: error.response.data }));
-      } else {
-        alert('서버와의 통신 중 오류가 발생했습니다.');
-      }
+      console.error("회원가입 중 에러 발생:", error);
     }
   };
 
   const fields = [
-    { label: '이름', name: 'name', type: 'text', placeholder: '이름을 입력해 주세요.' },
     { label: '이메일', name: 'email', type: 'email', placeholder: '이메일을 입력해 주세요.' },
     { label: '비밀번호', name: 'password', type: 'password', placeholder: '비밀번호를 입력해 주세요.' },
-    { label: '주소', name: 'address', type: 'text', placeholder: '주소를 입력해 주세요.' }
   ];
 
   return (
@@ -61,7 +54,7 @@ function App() {
         <Col md={6}>
           <Card>
             <Card.Body>
-              <h2 className="text-center mb-4">회원 가입</h2>
+              <h2 className="text-center mb-4">로그인</h2>
               <Form onSubmit={handleSubmit} noValidate>{/* 브라우저가 자체 제공하는 유효성 검사 메시지를 차단 */}
                 {fields.map(field => (
                   <Form.Group className="mb-3" key={field.name}>
@@ -77,7 +70,8 @@ function App() {
                     <Form.Control.Feedback type="invalid">{errors[field.name]}</Form.Control.Feedback>
                   </Form.Group>
                 ))}
-                <Button className="w-100 mt-3 mb-2" variant="outline-primary" type="submit">회원 가입</Button>
+                <Button className="w-100 mt-3 mb-2" variant="primary" type="submit">로그인</Button>
+                <Button className="w-100 mt-3 mb-2" variant="outline-secondary" type="submit">회원가입</Button>
               </Form>
             </Card.Body>
           </Card>

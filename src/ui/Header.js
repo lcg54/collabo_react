@@ -12,7 +12,7 @@ function App() {
         <Navbar.Brand href="/">{APP_NAME}</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="">상품 보기</Nav.Link>
-          <Nav.Link onClick={()=>navigate(`/member/signin`)}>로그인</Nav.Link>
+          <Nav.Link onClick={()=>navigate(`/member/login`)}>로그인</Nav.Link>
           <Nav.Link onClick={()=>navigate(`/member/signup`)}>회원가입</Nav.Link>
         </Nav>
         <Nav>
