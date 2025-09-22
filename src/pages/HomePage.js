@@ -1,5 +1,5 @@
 import { Carousel, Container, Image, Nav } from "react-bootstrap";
-import { API_BASE_URL } from "./../config/config";
+import { API_BASE_URL } from "../config/api";
 
 const carouselItems = [
   { src: "croissant_03_bigsize.png", alt: "크로아상", title: "크로아상", description: "바삭하고 결이 살아있는 프랑스식 버터 페이스트리" },
@@ -9,14 +9,19 @@ const carouselItems = [
   { src: "french_baguette_01_bigsize.png", alt: "프랑스 바게트", title: "프랑스 바게트", description: "바삭한 겉과 쫄깃한 속의 긴 막대형 빵." },
 ];
 
-function App() {
+export default function HomePage() {
   return (
     <Container className="mt-4">
       <Carousel>
         {carouselItems.map((item, idx) => (
           <Carousel.Item key={idx}>
-            <Nav.Link onClick={()=>{}}>
-              <Image className="d-block w-100" src={`${API_BASE_URL}/images/${item.src}`} alt={item.alt} thumbnail />
+            <Nav.Link onClick={() => {}}>
+              <Image
+                className="d-block w-100"
+                src={`${API_BASE_URL}/images/${item.src}`}
+                alt={item.alt}
+                thumbnail
+              />
               <Carousel.Caption>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
@@ -28,5 +33,3 @@ function App() {
     </Container>
   );
 }
-
-export default App;

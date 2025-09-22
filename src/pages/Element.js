@@ -1,19 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../config/config";
+import { API_BASE_URL, API_PATH } from "../config/api";
 import { Table } from "react-bootstrap";
 
-function App() {
+export default function Element() {
   const [elementList, setElementList] = useState([]);
 
   useEffect(() => {
-    const url = `${API_BASE_URL}/element`;
+    const url = `${API_BASE_URL}${API_PATH.ELEMENT}`;
 
-    axios.get(url, {}) // GET : "이걸 보여줘"라고 URL로 요청 (url?key=value) / POST : URL에 요청한 객체가 표시되지 않음
-      .then(response => {
+    axios
+      .get(url, {}) // GET : "이걸 보여줘"라고 URL로 요청 (url?key=value) / POST : URL에 요청한 객체가 표시되지 않음
+      .then((response) => {
         setElementList(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error); // 에러 처리
       });
   }, []);
@@ -33,7 +34,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {elementList.map(element => (
+          {elementList.map((element) => (
             <tr key={element.id}>
               <td>{Number(element.id)}</td>
               <td>{element.name}</td>
@@ -49,5 +50,3 @@ function App() {
     </>
   );
 }
-
-export default App;

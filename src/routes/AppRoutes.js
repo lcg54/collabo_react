@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-
+import { API_PATH } from "../config/api";
 import HomePage from './../pages/HomePage';
 import SignupPage from '../pages/SignupPage';
 import LoginPage from './../pages/LoginPage';
@@ -7,17 +7,15 @@ import Fruit from './../pages/Fruit';
 import FruitList from './../pages/FruitList';
 import Element from './../pages/Element';
 
-function App() {
+export default function AppRouts({ setUser }) {
   return (
     <Routes>
-      <Route path='/' element={<HomePage />} />
-      <Route path='/member/signup' element={<SignupPage />} />
-      <Route path='/member/login' element={<LoginPage />} />
-      <Route path='/fruit' element={<Fruit />} />
-      <Route path='/fruit/list' element={<FruitList />} />
-      <Route path='/element' element={<Element />} />
+      <Route path={API_PATH.HOME} element={<HomePage />} />
+      <Route path={API_PATH.SIGNUP} element={<SignupPage />} />
+      <Route path={API_PATH.LOGIN} element={<LoginPage setUser={setUser} />} />
+      <Route path={API_PATH.FRUIT} element={<Fruit />} />
+      <Route path={API_PATH.FRUIT_LIST} element={<FruitList />} />
+      <Route path={API_PATH.ELEMENT} element={<Element />} />
     </Routes>
   );
 }
-
-export default App;
