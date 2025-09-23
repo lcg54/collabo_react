@@ -16,7 +16,7 @@ export default function App() {
   return (
     <>
       <Header user={user} setUser={setUser} />
-      <AppRoutes setUser={setUser} />
+      <AppRoutes user={user} setUser={setUser} />
       <Footer />
     </>
   );

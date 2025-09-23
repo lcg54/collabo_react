@@ -1,4 +1,4 @@
-import { APP_NAME } from "../constant/appName";
+import { APP_NAME } from "../config/appName";
 
 export default function Footer() {
   return (

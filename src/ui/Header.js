@@ -1,6 +1,6 @@
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { APP_NAME } from "../constant/appName";
+import { APP_NAME } from "../config/appName";
 import { API_PATH } from "../config/api";
 
 export default function Header({ user, setUser }) {
@@ -45,9 +45,9 @@ export default function Header({ user, setUser }) {
   return (
     <Navbar expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="/">{APP_NAME}</Navbar.Brand>
+        <Navbar.Brand href={API_PATH.HOME}>{APP_NAME}</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link onClick={() => navigate(`/`)}>상품 보기</Nav.Link>
+          <Nav.Link onClick={() => navigate(API_PATH.PRODUCT_LIST)}>상품 보기</Nav.Link>
           <ChangeNavbarByLogin />
         </Nav>
         <Nav>
