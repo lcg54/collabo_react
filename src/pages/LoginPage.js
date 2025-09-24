@@ -39,11 +39,6 @@ export default function LoginPage({ setUser }) {
     }
   };
 
-  const handleClick = () => {
-    alert("회원가입 페이지로 이동합니다.");
-    navigate(API_PATH.SIGNUP);
-  };
-
   const fields = [
     { label: "이메일", name: "email", type: "email", placeholder: "이메일을 입력해 주세요." },
     { label: "비밀번호", name: "password", type: "password", placeholder: "비밀번호를 입력해 주세요." },
@@ -79,7 +74,12 @@ export default function LoginPage({ setUser }) {
                   onChange={(e) => setKeepLogin(e.target.checked)}
                 />
                 <Button className="w-100 mt-3 mb-2" variant="primary" type="submit">로그인</Button>
-                <Button className="w-100 mt-2 mb-2" variant="outline-secondary" onClick={handleClick}>회원가입</Button>
+                <Button className="w-100 mt-2 mb-2" variant="outline-secondary"
+                  onClick={() => {
+                    alert("회원가입 페이지로 이동합니다.");
+                    navigate(API_PATH.SIGNUP);
+                  }}
+                >회원가입</Button>
               </Form>
             </Card.Body>
           </Card>

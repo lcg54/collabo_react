@@ -20,7 +20,7 @@ export default function Header({ user, setUser }) {
       case "ADMIN":
         return (
           <>
-            <Nav.Link onClick={() => navigate('/')}>상품 등록</Nav.Link>
+            <Nav.Link onClick={() => navigate(API_PATH.PRODUCT_INSERT)}>상품 등록</Nav.Link>
             <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
           </>
         );
