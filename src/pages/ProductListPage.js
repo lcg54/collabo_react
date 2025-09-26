@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, ButtonGroup, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { API_BASE_URL, API_PATH } from "../config/api";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function ProductList({ user }) {
   const [products, setProducts] = useState([]);
@@ -12,21 +12,26 @@ export default function ProductList({ user }) {
   const [category, setCategory] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get(`${API_BASE_URL}${API_PATH.PRODUCT_LIST}`, {
+  const fetchProductList = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}${API_PATH.PRODUCT_LIST}`, {
         params: { page: currentPage, size: 6, category: category || undefined },
-      })
-      .then((res) => {
-        setProducts(res.data.products);
-        setTotalPages(res.data.totalPages);
-        setCurrentPage(res.data.currentPage);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("서버와의 통신 중 오류가 발생했습니다.");
       });
-  }, [currentPage, category]);
+      setProducts(response.data.products);
+      setTotalPages(response.data.totalPages);
+      setCurrentPage(response.data.currentPage);
+    } catch (err) {
+      if (err.response && err.response.data) {
+        alert(err.response.data);
+      } else {
+        alert("서버와의 통신 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchProductList();
+  }, [currentPage, category]); // 페이지나 카테고리 선택이 갱신되면 rendering
 
   return (
     <Container className="my-5">
@@ -74,7 +79,7 @@ export default function ProductList({ user }) {
             <Card
               className="h-100"
               style={{ cursor: "pointer" }}
-              onClick={() => navigate(`${API_PATH.PRODUCT}/${product.id}`)}
+              onClick={() => navigate(`${API_PATH.PRODUCT_DETAIL}/${product.id}`)}
             >
               <Card.Img
                 variant="top"
@@ -108,16 +113,19 @@ export default function ProductList({ user }) {
                               if (window.confirm(`정말 ${product.name}(${product.id}) 을(를) 삭제하시겠습니까?`)) {
                                 try {
                                   await axios.delete(`${API_BASE_URL}${API_PATH.PRODUCT_DELETE}/${product.id}`);
-                                  const res = await axios.get(`${API_BASE_URL}${API_PATH.PRODUCT_LIST}`, {
+                                  const response = await axios.get(`${API_BASE_URL}${API_PATH.PRODUCT_LIST}`, {
                                     params: { page: currentPage, size: 6, category: category || undefined },
                                   });
-                                  setProducts(res.data.products);
-                                  setTotalPages(res.data.totalPages);
-                                  setCurrentPage(res.data.currentPage);
-                                  alert("상품이 삭제되었습니다.");
+                                  setProducts(response.data.products);
+                                  setTotalPages(response.data.totalPages);
+                                  setCurrentPage(response.data.currentPage);
+                                  alert(response.data);
                                 } catch (err) {
-                                  console.error(err);
-                                  alert("상품 삭제 중 오류가 발생했습니다.");
+                                  if (err.response && err.response.data) {
+                                    alert(err.response.data);
+                                  } else {
+                                    alert("서버와의 통신 중 오류가 발생했습니다.");
+                                  }
                                 }
                               }
                             }}

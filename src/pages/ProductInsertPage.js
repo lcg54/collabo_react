@@ -20,12 +20,12 @@ export default function ProductInsertPage() {
     try {
       const response = await axios.post(`${API_BASE_URL}${API_PATH.PRODUCT_INSERT}`, formData);
       if (response.status === 201) {
-        alert("상품이 등록되었습니다.");
+        alert(response.data);
         navigate(API_PATH.PRODUCT_LIST);
       }
-    } catch (error) {
-      if (error.response && error.response.data) {
-        setErrors((prev) => ({ ...prev, ...error.response.data }));
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setErrors((prev) => ({ ...prev, ...err.response.data }));
       } else {
         alert("서버와의 통신 중 오류가 발생했습니다.");
       }
