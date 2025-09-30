@@ -21,14 +21,16 @@ export default function Header({ user, setUser }) {
         return (
           <>
             <Nav.Link onClick={() => navigate(API_PATH.PRODUCT_INSERT)}>상품 등록</Nav.Link>
+            <Nav.Link onClick={() => navigate(API_PATH.CART)}>장바구니</Nav.Link>
+            <Nav.Link onClick={() => navigate(API_PATH.ORDER_LIST)}>주문 내역</Nav.Link>
             <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
           </>
         );
       case "USER":
         return (
           <>
-            <Nav.Link onClick={() => navigate(`/`)}>장바구니</Nav.Link>
-            <Nav.Link onClick={() => navigate(`/`)}>주문 내역</Nav.Link>
+            <Nav.Link onClick={() => navigate(API_PATH.CART)}>장바구니</Nav.Link>
+            <Nav.Link onClick={() => navigate(API_PATH.ORDER_LIST)}>주문내역</Nav.Link>
             <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
           </>
         );
@@ -47,7 +49,7 @@ export default function Header({ user, setUser }) {
       <Container>
         <Navbar.Brand href={API_PATH.HOME}>{APP_NAME}</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link onClick={() => navigate(API_PATH.PRODUCT_LIST)}>상품 보기</Nav.Link>
+          <Nav.Link onClick={() => navigate(API_PATH.PRODUCT_LIST)}>상품목록</Nav.Link>
           <ChangeNavbarByLogin />
         </Nav>
         <Nav>

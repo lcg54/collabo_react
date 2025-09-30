@@ -21,8 +21,10 @@ export default function ProductList({ user }) {
       setTotalPages(response.data.totalPages);
       setCurrentPage(response.data.currentPage);
     } catch (err) {
-      if (err.response && err.response.data) {
-        alert(err.response.data);
+      if (err.response?.data) {
+        const data = err.response.data;
+        if (typeof data === "object") alert(JSON.stringify(data, null, 2));
+        else alert(data);
       } else {
         alert("서버와의 통신 중 오류가 발생했습니다.");
       }
@@ -101,7 +103,7 @@ export default function ProductList({ user }) {
                             className="mb-2"
                             onClick={(e) => {
                               e.stopPropagation(); // 카드 클릭 이벤트와 충돌 방지
-                              navigate(API_PATH.PRODUCT_UPDATE);
+                              navigate(`${API_PATH.PRODUCT_UPDATE}/${product.id}`);
                             }}
                           >
                             수정
