@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_BASE_URL, API_PATH } from "../config/api";
+import { API_BASE_URL, PATH } from "../config/url";
 import { Table } from "react-bootstrap";
 
 export default function Element() {
   const [elementList, setElementList] = useState([]);
 
   useEffect(() => {
-    const url = `${API_BASE_URL}${API_PATH.ELEMENT}`;
+    const url = `${API_BASE_URL}${PATH.ELEMENT}`;
 
     axios
       .get(url, {}) // GET : "이걸 보여줘"라고 URL로 요청 (url?key=value) / POST : URL에 요청한 객체가 표시되지 않음

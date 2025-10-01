@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL, API_PATH } from "../config/api";
-import { Container, Table, Row, Col, Form, Button, Image } from "react-bootstrap";
+import { Container, Table, Row, Col, Form, Button, Image, Spinner } from "react-bootstrap";
+import { API_BASE_URL, IMAGES, PATH } from "../config/url";
 import axios from "axios";
 
 export default function CartPage({ user }) {
@@ -17,7 +17,7 @@ export default function CartPage({ user }) {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}${API_PATH.CART}`, { params: { memberId: user.id } });
+      const res = await axios.get(`${API_BASE_URL}${PATH.CART}`, { params: { memberId: user.id } });
       setCart(res.data);
     } catch (err) {
       console.log("장바구니 불러오기 실패:", err);
@@ -37,12 +37,20 @@ export default function CartPage({ user }) {
     else setCheckedItems([]);
   };
 
-  const handleQuantityChange = (itemId, newQuantity) => {
+  const handleQuantityChange = async (itemId, newQuantity) => {
     setCart(prev => ({
       ...prev, items: prev.items.map(item =>
         item.id === itemId ? { ...item, quantity: Number(newQuantity) } : item
       ),
     }));
+    try {
+      await axios.patch(`${API_BASE_URL}${PATH.CART}/${itemId}`, 
+        { quantity: Number(newQuantity) },
+        { params: { memberId: user.id } }
+      );
+    } catch (err) {
+      console.error("수량 변경 실패:", err);
+    }
   };
 
   const handleOrder = async () => {
@@ -50,71 +58,81 @@ export default function CartPage({ user }) {
       alert("주문할 상품을 선택하세요.");
       return;
     }
+    if (!window.confirm("선택한 상품을 주문하시겠습니까?")) return;
     const selectedItems = cart.items.filter(item => checkedItems.includes(item.id));
     try {
-      const res = await axios.post(`${API_BASE_URL}${API_PATH.ORDER}`, {
+      const res = await axios.post(`${API_BASE_URL}${PATH.ORDER}`, {
         memberId: user.id,
         orderStatus: "PENDING",
         orderItems: selectedItems.map(item => ({
+          cartProductId: item.id,
           productId: item.productId,
           quantity: item.quantity,
         }))
       });
-      window.confirm()
       alert(res.data);
-      fetchCart(); // 장바구니 갱신
+      await fetchCart(); // 장바구니 갱신
       setCheckedItems([]);
+      navigate(PATH.ORDER_LIST);
     } catch (err) {
       console.error("주문 실패:", err);
-      alert("주문 중 오류가 발생했습니다.");
+      alert("주문 처리 중 오류가 발생했습니다.");
     }
   };
 
   const handleRemoveItem = async (itemId) => {
     if (!window.confirm("이 상품을 장바구니에서 삭제하시겠습니까?")) return;
     try {
-      await axios.delete(`${API_BASE_URL}${API_PATH.CART_DELETE}/${itemId}`, { params: { memberId: user.id } });
-      alert("상품이 장바구니에서 삭제되었습니다.");
-      fetchCart(); // 장바구니 갱신
+      const res = await axios.delete(`${API_BASE_URL}${PATH.CART_DELETE}/${itemId}`, { params: { memberId: user.id } });
+      alert(res.data);
+      await fetchCart(); // 장바구니 갱신
     } catch (err) {
       console.log("삭제 실패:", err);
     }
   };
 
-  if (loading) return <div className="text-center mt-5">로딩 중...</div>;
+  if (loading) {
+    return (
+      <Container className="my-5 text-center">
+        <Spinner animation="border" />
+        <h3>주문 목록을 불러오는 중입니다.</h3>
+      </Container>
+    );
+  }
 
   if (!cart || cart.items.length === 0)
     return (
-      <Container className="mt-5 text-center">
+      <Container className="my-5 text-center">
         <h4 className="text-muted mb-3">장바구니가 비어 있습니다.</h4>
-        <Button variant="primary" onClick={() => navigate(API_PATH.PRODUCT_LIST)}>상품 보러 가기</Button>
+        <Button variant="primary" onClick={() => navigate(PATH.PRODUCT_LIST)}>상품 보러 가기</Button>
       </Container>
     );
 
-  const totalPrice = cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const totalPrice = cart.items
+    .filter((item) => checkedItems.includes(item.id)) // 체크된 상품만
+    .reduce((acc, item) => acc + item.price * item.quantity, 0); // 합산 (acc = 누적값, 0 = 초기값)
 
   return (
-    <Container className="mt-4">
+    <Container className="my-5">
       <h2 className="mb-4">
-        <span style={{ color: "blue", fontSize: "2rem" }}>{cart.memberName}</span>
-        <span style={{ fontSize: "1.3rem" }}>님의 장바구니</span>
+        <span style={{ fontSize: "2rem" }}>🛒 장바구니</span>
       </h2>
 
       <Table striped bordered>
         <thead>
           <tr>
-            <th style={{ width: "8%", textAlign: "center" }}>
+            <th className="text-center">
               <Form.Check
                 type="checkbox"
                 label="전체 선택"
-                checked={checkedItems.length === cart.items.length}
+                checked={cart.items.length > 0 && checkedItems.length === cart.items.length}
                 onChange={(e) => toggleAllCheckBox(e.target.checked)}
               />
             </th>
-            <th style={{ width: "40%" }} className="text-center">상품 정보</th>
-            <th style={{ width: "15%" }} className="text-center">수량</th>
-            <th style={{ width: "20%" }} className="text-center">금액</th>
-            <th style={{ width: "15%" }} className="text-center">삭제</th>
+            <th className="text-center">상품 정보</th>
+            <th className="text-center">수량</th>
+            <th className="text-center">금액</th>
+            <th className="text-center">메뉴</th>
           </tr>
         </thead>
         <tbody>
@@ -132,7 +150,7 @@ export default function CartPage({ user }) {
                 <Row>
                   <Col xs={4}>
                     <Image
-                      src={`${API_BASE_URL}/images/${item.productImage}`}
+                      src={`${API_BASE_URL}${IMAGES}/${item.productImage}`}
                       thumbnail
                       alt={item.productName}
                       width={80}
@@ -158,11 +176,19 @@ export default function CartPage({ user }) {
               </td>
               <td className="text-center align-middle">
                 <Button
-                  variant="danger"
+                  variant="outline-success"
+                  size="sm"
+                  onClick={() => navigate(`${PATH.PRODUCT_DETAIL}/${item.productId}`)}
+                >
+                  상세보기
+                </Button>
+                &nbsp;&nbsp;
+                <Button
+                  variant="outline-danger"
                   size="sm"
                   onClick={() => handleRemoveItem(item.id)}
                 >
-                  삭제
+                  장바구니에서 제거
                 </Button>
               </td>
             </tr>
@@ -171,8 +197,23 @@ export default function CartPage({ user }) {
       </Table>
 
       <div className="text-end mt-3">
-        <h3>총 주문 금액: {totalPrice.toLocaleString()}원</h3>
-        <Button variant="primary" size="lg" onClick={handleOrder}>주문하기</Button>
+        <h3 className="mb-3">총 주문 금액: {totalPrice.toLocaleString()}원</h3>
+        <Button 
+          variant="success"
+          size="lg"
+          onClick={() => navigate(PATH.PRODUCT_LIST)}
+        >
+          목록으로
+        </Button>
+        &nbsp;&nbsp;
+        <Button 
+          variant="primary"
+          size="lg"
+          onClick={handleOrder}
+          disabled={checkedItems.length === 0}
+        >
+          주문하기
+        </Button>
       </div>
     </Container>
   );

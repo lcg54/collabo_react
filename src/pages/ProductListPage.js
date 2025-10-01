@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, ButtonGroup, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { API_BASE_URL, API_PATH } from "../config/api";
+import { API_BASE_URL, PATH } from "../config/url";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -14,7 +14,7 @@ export default function ProductList({ user }) {
 
   const fetchProductList = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}${API_PATH.PRODUCT_LIST}`, {
+      const response = await axios.get(`${API_BASE_URL}${PATH.PRODUCT_LIST}`, {
         params: { page: currentPage, size: 6, category: category || undefined },
       });
       setProducts(response.data.products);
@@ -37,7 +37,9 @@ export default function ProductList({ user }) {
 
   return (
     <Container className="my-5">
-      <h1 className="my-4">상품 목록</h1>
+      <h2 className="mb-4">
+        <span style={{ fontSize: "2rem" }}>🏷️ 상품목록</span>
+      </h2>
 
       {/* 검색/필터 UI */}
       <Row className="mb-4 align-items-center">
@@ -81,7 +83,7 @@ export default function ProductList({ user }) {
             <Card
               className="h-100"
               style={{ cursor: "pointer" }}
-              onClick={() => navigate(`${API_PATH.PRODUCT_DETAIL}/${product.id}`)}
+              onClick={() => navigate(`${PATH.PRODUCT_DETAIL}/${product.id}`)}
             >
               <Card.Img
                 variant="top"
@@ -103,7 +105,7 @@ export default function ProductList({ user }) {
                             className="mb-2"
                             onClick={(e) => {
                               e.stopPropagation(); // 카드 클릭 이벤트와 충돌 방지
-                              navigate(`${API_PATH.PRODUCT_UPDATE}/${product.id}`);
+                              navigate(`${PATH.PRODUCT_UPDATE}/${product.id}`);
                             }}
                           >
                             수정
@@ -114,8 +116,8 @@ export default function ProductList({ user }) {
                               e.stopPropagation(); // 카드 클릭 이벤트와 충돌 방지
                               if (window.confirm(`정말 ${product.name}(${product.id}) 을(를) 삭제하시겠습니까?`)) {
                                 try {
-                                  await axios.delete(`${API_BASE_URL}${API_PATH.PRODUCT_DELETE}/${product.id}`);
-                                  const response = await axios.get(`${API_BASE_URL}${API_PATH.PRODUCT_LIST}`, {
+                                  await axios.delete(`${API_BASE_URL}${PATH.PRODUCT_DELETE}/${product.id}`);
+                                  const response = await axios.get(`${API_BASE_URL}${PATH.PRODUCT_LIST}`, {
                                     params: { page: currentPage, size: 6, category: category || undefined },
                                   });
                                   setProducts(response.data.products);
@@ -157,7 +159,7 @@ export default function ProductList({ user }) {
         <Button
           variant="success"
           className="mb-3"
-          onClick={() => navigate(API_PATH.PRODUCT_INSERT)}
+          onClick={() => navigate(PATH.PRODUCT_INSERT)}
         >
           상품 등록
         </Button>

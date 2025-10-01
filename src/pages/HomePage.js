@@ -1,5 +1,5 @@
 import { Carousel, Container, Image, Nav } from "react-bootstrap";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL } from "../config/url";
 
 const carouselItems = [
   { src: "croissant_03_bigsize.png", alt: "크로아상", title: "크로아상", description: "바삭하고 결이 살아있는 프랑스식 버터 페이스트리" },

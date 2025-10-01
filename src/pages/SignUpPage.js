@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { API_BASE_URL, API_PATH } from "../config/api";
+import { API_BASE_URL, PATH } from "../config/url";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -20,12 +20,12 @@ export default function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // 폼 기본동작(=새로고침) 막기
     try {
-      const response = await axios.post(`${API_BASE_URL}${API_PATH.SIGNUP}`,formData); // axios를 사용한 post 요청
+      const response = await axios.post(`${API_BASE_URL}${PATH.SIGNUP}`,formData); // axios를 사용한 post 요청
       if (response.status == 201) {
         setFormData({ name: "", email: "", password: "", address: "" });
         setErrors({});
         alert(response.data);
-        navigate(API_PATH.LOGIN);
+        navigate(PATH.LOGIN);
       }
     } catch (error) {
       if (error.response && error.response.data) {

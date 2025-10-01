@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { API_BASE_URL, API_PATH } from "../config/api";
+import { API_BASE_URL, PATH } from "../config/url";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -18,10 +18,10 @@ export default function ProductInsertPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_BASE_URL}${API_PATH.PRODUCT_INSERT}`, formData);
+      const response = await axios.post(`${API_BASE_URL}${PATH.PRODUCT_INSERT}`, formData);
       if (response.status === 201) {
         alert(response.data);
-        navigate(API_PATH.PRODUCT_LIST);
+        navigate(PATH.PRODUCT_LIST);
       }
     } catch (err) {
       if (err.response && err.response.data) {
@@ -34,7 +34,9 @@ export default function ProductInsertPage() {
 
   return (
     <Container className="my-5">
-      <h1  className="my-4">상품 등록</h1>
+      <h2 className="mb-4">
+        <span style={{ fontSize: "2rem" }}>✅ 상품등록</span>
+      </h2>
       <Row>
         <Col md={8}>
           <Form onSubmit={handleSubmit} noValidate>

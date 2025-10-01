@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { API_BASE_URL, API_PATH } from "../config/api";
+import { API_BASE_URL, PATH } from "../config/url";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -19,7 +19,7 @@ export default function LoginPage({ setUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_BASE_URL}${API_PATH.LOGIN}`,formData);
+      const response = await axios.post(`${API_BASE_URL}${PATH.LOGIN}`,formData);
       if (response.status === 200) {
         const { message, user } = response.data;
         if (keepLogin) localStorage.setItem("user", JSON.stringify(user)); // 체크되면 localStorage에 장기저장
@@ -28,7 +28,7 @@ export default function LoginPage({ setUser }) {
         setErrors({});
         alert(message);
         setUser(user);
-        navigate(API_PATH.HOME);
+        navigate(PATH.HOME);
       }
     } catch (error) {
       if (error.response && error.response.data) {
@@ -77,7 +77,7 @@ export default function LoginPage({ setUser }) {
                 <Button className="w-100 mt-2 mb-2" variant="outline-secondary"
                   onClick={() => {
                     alert("회원가입 페이지로 이동합니다.");
-                    navigate(API_PATH.SIGNUP);
+                    navigate(PATH.SIGNUP);
                   }}
                 >회원가입</Button>
               </Form>

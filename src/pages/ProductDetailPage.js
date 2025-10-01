@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Card, Col, Container, Row, Spinner, Table, Form } from "react-bootstrap";
-import { API_BASE_URL, API_PATH } from "../config/api";
+import { Button, Card, Col, Container, Row, Spinner, Table, Form, Modal } from "react-bootstrap";
+import { API_BASE_URL, PATH } from "../config/url";
 import axios from "axios";
 
 export default function ProductDetailPage({ user }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(0);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}${API_PATH.PRODUCT_DETAIL}/${id}`);
-      setProduct(response.data);
+      const res = await axios.get(`${API_BASE_URL}${PATH.PRODUCT_DETAIL}/${id}`);
+      setProduct(res.data);
     } catch (err) {
       if (err.response && err.response.data) alert(err.response.data);
       else alert("서버와의 통신 중 오류가 발생했습니다.");
@@ -28,6 +29,50 @@ export default function ProductDetailPage({ user }) {
     fetchProduct();
   }, [id]);
 
+  const handleAddToCart = async () => {
+    if (!user) return alert("로그인 후 이용해주세요.");
+    if (quantity < 1) return alert("수량은 1개 이상이어야 합니다.");
+    try {
+      await axios.post(
+        `${API_BASE_URL}${PATH.CART_INSERT}`,
+        { productId: product.id, quantity: quantity },
+        { params: { memberId: user.id } }
+      );
+      alert("상품이 장바구니에 추가되었습니다.");
+      navigate(PATH.CART);
+    } catch (err) {
+      console.error("장바구니 추가 실패:", err);
+    }
+  };
+
+  const handleBuyNowClick = () => {
+    if (!user) return alert("로그인 후 이용해주세요.");
+    if (quantity < 1) return alert("수량은 1개 이상이어야 합니다.");
+    setShowConfirm(true);
+  };
+
+  const handleOrder = async () => {
+    setShowConfirm(false);
+    try {
+      const res = await axios.post(`${API_BASE_URL}${PATH.ORDER}`, {
+      memberId: user.id,
+      orderStatus: "PENDING",
+      orderItems: [
+        {
+          cartProductId: 0, // 장바구니 거치지 않으므로 더미값
+          productId: product.id,
+          quantity: quantity,
+        },
+      ],
+    });
+      alert(res.data);
+      navigate(PATH.ORDER_LIST);
+    } catch (err) {
+      console.error("주문 실패:", err);
+      alert("주문 처리 중 오류가 발생했습니다.");
+    }
+  };
+
   if (loading) {
     return (
       <Container className="my-4 text-center">
@@ -36,31 +81,6 @@ export default function ProductDetailPage({ user }) {
       </Container>
     );
   }
-
-  const handleAddToCart = async () => {
-    if (!user) {
-      alert("로그인 후 이용해주세요.");
-      return;
-    }
-    if (quantity < 1) {
-      alert(`구매 수량은 1개 이상이어야 합니다.`);
-      return;
-    }
-    try {
-      await axios.post(`${API_BASE_URL}${API_PATH.CART_INSERT}`, 
-        {
-          productId: product.id, 
-          quantity: quantity
-        },
-        { params: { memberId: user.id } }
-      );
-      alert("상품이 장바구니에 추가되었습니다.");
-      navigate(API_PATH.CART);
-    } catch (err) {
-      console.error("장바구니 추가 실패:", err);
-      alert("장바구니 추가에 실패했습니다.");
-    }
-  };
 
   return (
     <Container className="my-5">
@@ -118,7 +138,7 @@ export default function ProductDetailPage({ user }) {
                 <Button
                   variant="success"
                   className="me-3 px-4"
-                  onClick={() => navigate(API_PATH.PRODUCT_LIST)}
+                  onClick={() => navigate(PATH.PRODUCT_LIST)}
                 >
                   목록으로
                 </Button>
@@ -132,7 +152,7 @@ export default function ProductDetailPage({ user }) {
                 <Button
                   variant="danger"
                   className="me-3 px-4"
-                  onClick={() => navigate('/')}
+                  onClick={handleBuyNowClick}
                 >
                   바로 구매하기
                 </Button>
@@ -141,6 +161,28 @@ export default function ProductDetailPage({ user }) {
           </Col>
         </Row>
       </Card>
+
+      <Modal show={showConfirm} onHide={() => setShowConfirm(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>구매 확인</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            <strong>{product.name}</strong>을(를) {quantity}개 구매하시겠습니까?
+          </p>
+          <p className="text-muted">
+            총 금액: <strong>{(product.price * quantity).toLocaleString()}원</strong>
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+            취소
+          </Button>
+          <Button variant="danger" onClick={handleOrder}>
+            구매 확정
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 }

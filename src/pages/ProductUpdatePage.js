@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
-import { API_BASE_URL, API_PATH } from "../config/api";
+import { API_BASE_URL, PATH } from "../config/url";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -13,7 +13,7 @@ export default function ProductUpdatePage() {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}${API_PATH.PRODUCT_DETAIL}/${id}`);
+      const response = await axios.get(`${API_BASE_URL}${PATH.PRODUCT_DETAIL}/${id}`);
       setFormData(response.data);
     } catch (err) {
       if (err.response && err.response.data) alert(err.response.data);
@@ -37,9 +37,9 @@ export default function ProductUpdatePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`${API_BASE_URL}${API_PATH.PRODUCT_UPDATE}/${id}`, formData);
+      const response = await axios.put(`${API_BASE_URL}${PATH.PRODUCT_UPDATE}/${id}`, formData);
       alert(response.data);
-      navigate(API_PATH.PRODUCT_LIST);
+      navigate(PATH.PRODUCT_LIST);
     } catch (err) {
       if (err.response && err.response.data) setErrors((prev) => ({ ...prev, ...err.response.data }));
       else alert("서버와의 통신 중 오류가 발생했습니다.");
@@ -57,7 +57,9 @@ export default function ProductUpdatePage() {
 
   return (
     <Container className="my-5">
-      <h1 className="my-4">상품 수정</h1>
+      <h2 className="mb-4">
+        <span style={{ fontSize: "2rem" }}>✅ 상품수정</span>
+      </h2>
       <Row>
         <Col md={8}>
           <Form onSubmit={handleSubmit} noValidate>
