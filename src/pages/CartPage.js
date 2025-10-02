@@ -203,7 +203,7 @@ export default function CartPage({ user }) {
           size="lg"
           onClick={() => navigate(PATH.PRODUCT_LIST)}
         >
-          목록으로
+          쇼핑 이어하기
         </Button>
         &nbsp;&nbsp;
         <Button 

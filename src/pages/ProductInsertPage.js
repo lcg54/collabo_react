@@ -35,7 +35,7 @@ export default function ProductInsertPage() {
   return (
     <Container className="my-5">
       <h2 className="mb-4">
-        <span style={{ fontSize: "2rem" }}>✅ 상품등록</span>
+        <span style={{ fontSize: "2rem" }}>✏️ 상품등록</span>
       </h2>
       <Row>
         <Col md={8}>

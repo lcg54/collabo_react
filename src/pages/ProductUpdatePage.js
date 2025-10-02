@@ -58,7 +58,7 @@ export default function ProductUpdatePage() {
   return (
     <Container className="my-5">
       <h2 className="mb-4">
-        <span style={{ fontSize: "2rem" }}>✅ 상품수정</span>
+        <span style={{ fontSize: "2rem" }}>✂️ 상품수정</span>
       </h2>
       <Row>
         <Col md={8}>

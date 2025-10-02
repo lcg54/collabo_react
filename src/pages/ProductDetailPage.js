@@ -84,6 +84,9 @@ export default function ProductDetailPage({ user }) {
 
   return (
     <Container className="my-5">
+      <h2 className="mb-4">
+        <span style={{ fontSize: "2rem" }}>🏷️ 상품정보</span>
+      </h2>
       <Card>
         <Row className="g-0">
           <Col md={4}>
@@ -135,23 +138,32 @@ export default function ProductDetailPage({ user }) {
               </Form.Group>
 
               <div className="d-flex justify-content-center mt-3">
+                {user.role === "ADMIN" && (
+                  <Button
+                    variant="warning"
+                    className="me-3 px-3"
+                    onClick={() => navigate(`${PATH.PRODUCT_UPDATE}/${product.id}`)}
+                  >
+                    수정하기
+                  </Button>
+                )}
                 <Button
                   variant="success"
-                  className="me-3 px-4"
+                  className="me-3 px-3"
                   onClick={() => navigate(PATH.PRODUCT_LIST)}
                 >
                   목록으로
                 </Button>
                 <Button
                   variant="primary"
-                  className="me-3 px-4"
+                  className="me-3 px-3"
                   onClick={handleAddToCart}
                 >
                   장바구니에 담기
                 </Button>
                 <Button
                   variant="danger"
-                  className="me-3 px-4"
+                  className="me-3 px-3"
                   onClick={handleBuyNowClick}
                 >
                   바로 구매하기

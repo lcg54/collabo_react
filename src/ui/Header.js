@@ -8,10 +8,13 @@ export default function Header({ user, setUser }) {
 
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
-      localStorage.removeItem("user");
-      sessionStorage.removeItem("user");
-      setUser(null);
       navigate(PATH.HOME);
+      alert("로그아웃 되었습니다.");
+      setTimeout(() => {
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
+        setUser(null);
+      }, 0);
     }
   };
 
@@ -23,6 +26,7 @@ export default function Header({ user, setUser }) {
             <Nav.Link onClick={() => navigate(PATH.PRODUCT_INSERT)}>상품등록</Nav.Link>
             <Nav.Link onClick={() => navigate(PATH.CART)}>장바구니</Nav.Link>
             <Nav.Link onClick={() => navigate(PATH.ORDER_LIST)}>주문내역</Nav.Link>
+            <Nav.Link onClick={() => navigate(PATH.INFO)}>내 정보</Nav.Link>
             <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
           </>
         );
@@ -31,6 +35,7 @@ export default function Header({ user, setUser }) {
           <>
             <Nav.Link onClick={() => navigate(PATH.CART)}>장바구니</Nav.Link>
             <Nav.Link onClick={() => navigate(PATH.ORDER_LIST)}>주문내역</Nav.Link>
+            <Nav.Link onClick={() => navigate(PATH.INFO)}>내 정보</Nav.Link>
             <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
           </>
         );
@@ -51,7 +56,6 @@ export default function Header({ user, setUser }) {
         <Nav className="me-auto">
           <Nav.Link onClick={() => navigate(PATH.PRODUCT_LIST)}>상품목록</Nav.Link>
           <ChangeNavbarByLogin />
-          <Nav.Link onClick={() => navigate(PATH.INFO)}>내 정보</Nav.Link>
         </Nav>
         <Nav>
           <NavDropdown title="Example Dropdown">

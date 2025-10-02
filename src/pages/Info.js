@@ -29,11 +29,11 @@ export default function MyPage({ user }) {
         <Card.Body>
           <ul>
             <li>회원번호 : {userInfo.id}</li>
+            <li>회원등급 : {userInfo.role === "ADMIN" ? "관리자" : "일반"}</li>
             <li>이름 : {userInfo.name}</li>
             <li>이메일 : {userInfo.email}</li>
             <li>주소 : {userInfo.address}</li>
             <li>가입일 : {userInfo.regDate}</li>
-            <li>role : {userInfo.role}</li>
           </ul>
         </Card.Body>
       </Card>

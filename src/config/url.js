@@ -23,6 +23,8 @@ export const PATH = {
 
   ORDER: '/order',
   ORDER_LIST: '/order/list',
+  ORDER_DELETE: '/order/delete',
+  ORDER_UPDATE: '/order/update',
   
   FRUIT: '/fruit',
   FRUIT_LIST: '/fruit/list',
