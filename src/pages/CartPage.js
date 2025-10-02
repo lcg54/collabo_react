@@ -59,6 +59,7 @@ export default function CartPage({ user }) {
       return;
     }
     if (!window.confirm("선택한 상품을 주문하시겠습니까?")) return;
+    
     const selectedItems = cart.items.filter(item => checkedItems.includes(item.id));
     try {
       const res = await axios.post(`${API_BASE_URL}${PATH.ORDER}`, {

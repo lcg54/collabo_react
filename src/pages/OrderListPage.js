@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Card, Row, Col, Spinner, Button, ListGroup, Dropdown } from "react-bootstrap";
+import { Container, Card, Row, Col, Spinner, Button, Dropdown } from "react-bootstrap";
 import { API_BASE_URL, PATH } from "../config/url";
 import axios from "axios";
 
@@ -35,10 +35,10 @@ export default function OrderListPage({ user }) {
   const handleDelete = async (orderId) => {
     if (!window.confirm("정말 이 주문을 삭제하시겠습니까?")) return;
     try {
-      await axios.delete(`${API_BASE_URL}${PATH.ORDER_DELETE}/${orderId}`, {
+      const res = await axios.delete(`${API_BASE_URL}${PATH.ORDER_DELETE}/${orderId}`, {
         params: { memberId: user.id, role: user.role }
       });
-      alert("주문이 삭제되었습니다.");
+      alert(res.data);
       setOrders(orders.filter(order => order.orderId !== orderId));
     } catch (err) {
       alert(err.response?.data || "주문 내역 삭제 중 오류가 발생했습니다.");
@@ -47,10 +47,11 @@ export default function OrderListPage({ user }) {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await axios.put(`${API_BASE_URL}${PATH.ORDER_UPDATE}/${orderId}`, null, {
-        params: { newStatus, role: user.role }
-      });
-      alert(`주문 상태가 '${newStatus}'(으)로 변경되었습니다.`);
+      const res = await axios.patch(`${API_BASE_URL}${PATH.ORDER_UPDATE}/${orderId}`,
+        { newStatus },
+        { params: { role: user.role }}
+      );
+      alert(res.data);
       fetchOrders();
     } catch (err) {
       alert(err.response?.data || "주문 상태 변경 중 오류가 발생했습니다.");

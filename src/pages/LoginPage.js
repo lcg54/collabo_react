@@ -19,9 +19,9 @@ export default function LoginPage({ setUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_BASE_URL}${PATH.LOGIN}`,formData);
-      if (response.status === 200) {
-        const { message, user } = response.data;
+      const res = await axios.post(`${API_BASE_URL}${PATH.LOGIN}`, formData);
+      if (res.status === 200) {
+        const { message, user } = res.data;
         if (keepLogin) localStorage.setItem("user", JSON.stringify(user)); // 체크되면 localStorage에 장기저장
         else sessionStorage.setItem("user", JSON.stringify(user)); // 체크 안되면 session 동안만 단기저장
         setFormData({ email: "", password: "" });

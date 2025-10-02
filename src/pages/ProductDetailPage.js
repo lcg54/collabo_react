@@ -55,16 +55,17 @@ export default function ProductDetailPage({ user }) {
     setShowConfirm(false);
     try {
       const res = await axios.post(`${API_BASE_URL}${PATH.ORDER}`, {
-      memberId: user.id,
-      orderStatus: "PENDING",
-      orderItems: [
-        {
-          cartProductId: 0, // 장바구니 거치지 않으므로 더미값
-          productId: product.id,
-          quantity: quantity,
-        },
-      ],
-    });
+        memberId: user.id,
+        orderStatus: "PENDING",
+        orderItems: [
+          {
+            cartProductId: 0, // 장바구니 거치지 않으므로 더미값
+            productId: product.id,
+            quantity: quantity,
+          },
+        ],
+      }
+    );
       alert(res.data);
       navigate(PATH.ORDER_LIST);
     } catch (err) {
