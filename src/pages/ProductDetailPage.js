@@ -101,7 +101,7 @@ export default function ProductDetailPage({ user }) {
           <Col md={8}>
             <Card.Body>
               <Card.Title className="fd-3">
-                {product.name}
+                &nbsp; {product.name}
               </Card.Title>
               <Table striped>
                 <tbody>

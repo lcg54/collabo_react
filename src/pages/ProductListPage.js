@@ -6,7 +6,6 @@ import axios from "axios";
 
 export default function ProductList({ user }) {
   const [products, setProducts] = useState([]);
-  // 프론트에서 페이징하면 코딩이 쉽긴 하지만 데이터가 많을 경우 망함. 따라서 백엔드에서 페이징 진행
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [category, setCategory] = useState("");
@@ -33,7 +32,7 @@ export default function ProductList({ user }) {
 
   useEffect(() => {
     fetchProductList();
-  }, [currentPage, category]); // 페이지나 카테고리 선택이 갱신되면 rendering
+  }, [currentPage, category]);
 
   return (
     <Container className="my-5">
@@ -55,7 +54,7 @@ export default function ProductList({ user }) {
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
-              setCurrentPage(1); // 카테고리 변경 시 1페이지로 이동
+              setCurrentPage(1);
             }}
           >
             <option value="">카테고리 선택</option>

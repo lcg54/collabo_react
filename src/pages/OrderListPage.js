@@ -157,7 +157,7 @@ function OrderCard({ order, user, onDelete, onStatusChange }) {
               </Dropdown>
             )}
             <Button variant="outline-danger" size="sm" onClick={() => onDelete(order.orderId)}>
-              {order.orderStatus === "PENDING" && user.role === "USER" ? "주문 취소" : "주문 내역 삭제"}
+              {order.orderStatus === "PENDING" && user.role === "USER" ? "주문 취소" : "주문내역 삭제"}
             </Button>
           </div>
         </Card.Body>

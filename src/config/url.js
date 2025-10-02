@@ -11,6 +11,7 @@ export const PATH = {
   LOGIN: '/member/login',
   INFO: '/member/info',
   
+  PRODUCT: '/product',
   PRODUCT_LIST: '/product/list',
   PRODUCT_DETAIL: '/product/detail',
   PRODUCT_INSERT: '/product/insert',
